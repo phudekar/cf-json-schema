@@ -1,0 +1,148 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "JSON schema for AWS Cloud Formation (.cf.json) template files",
+    "definitions": {
+        "resourceType": {
+            "type": "string",
+            "enum": [
+                "AWS::EC2::DHCPOptions",
+                "AWS::EC2::EIP",
+                "AWS::EC2::VPC"
+            ]
+        },
+        "resources": {
+            "type": "object",
+            "properties": {
+                "Resources": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/definitions/vpc"
+                            },
+                            {
+                                "$ref": "#/definitions/dhcpOptions"
+                            },
+                            {
+                                "$ref": "#/definitions/eip"
+                            }
+                        ],
+                        "default": {}
+                    }
+                }
+            }
+        },
+        "dhcpOptions": {
+            "type": "object",
+            "properties": {
+                "Type": {
+                    "$ref": "#/definitions/resourceType",
+                    "pattern": "AWS::EC2::DHCPOptions"
+                },
+                "Properties": {
+                    "type": "object",
+                    "properties": {
+                        "DomainName": {
+                            "type": "string"
+                        },
+                        "DomainNameServers": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "NetbiosNameServers": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "NetbiosNodeType": {
+                            "type": "number"
+                        },
+                        "NtpServers": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "Tags": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "eip": {
+            "type": "object",
+            "properties": {
+                "Type": {
+                    "$ref": "#/definitions/resourceType",
+                    "pattern": "AWS::EC2::EIP"
+                },
+                "Properties": {
+                    "type": "object",
+                    "properties": {
+                        "InstanceId": {
+                            "type": "string"
+                        },
+                        "Domain": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "vpc": {
+            "type": "object",
+            "properties": {
+                "Type": {
+                    "$ref": "#/definitions/resourceType",
+                    "pattern": "AWS::EC2::VPC"
+                },
+                "Properties": {
+                    "type": "object",
+                    "required": ["CidrBlock"],
+                    "properties": {
+                        "CidrBlock": {
+                            "type": "string",
+                            "pattern": "^\\d+.\\d+.\\d+.\\d+(/\\d+)?$"
+                        },
+                        "EnableDnsSupport": {
+                            "type": "boolean"
+                        },
+                        "EnableDnsHostnames": {
+                            "type": "boolean"
+                        },
+                        "InstanceTenancy": {
+                            "type": "string",
+                            "enum": [
+                                "default",
+                                "dedicated"
+                            ]
+                        },
+                        "Tags": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "allOf": [
+        {
+            "$ref": "#/definitions/resources"
+        },
+        {
+            "required": [
+                "Resources"
+            ]
+        }
+    ]
+}

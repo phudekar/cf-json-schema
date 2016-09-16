@@ -1,0 +1,11 @@
+{
+    "Resources": {
+        "vpc": {
+            "Type": "AWS::EC2::VPC",
+            "Properties": {
+                "CidrBlock": "10.0.0.1/16",
+                "InstanceTenancy": "dedicated"
+            }
+        }
+    }
+}
