@@ -6,6 +6,28 @@
                 "CidrBlock": "10.0.0.1/16",
                 "InstanceTenancy": "dedicated"
             }
+        },
+        "eip": {
+            "Type": "AWS::EC2::EIP",
+            "Properties": {
+                "Domain": "",
+                "InstanceId": {
+                    "Ref": ""
+                }
+            }
+        },
+        "subnet": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+                "CidrBlock": "10.0.0.1/16",
+                "VpcId": ""
+            }
+        }
+    },
+    "Parameters": {
+        "abc": {
+            "Type": "Number",
+            "Default": 2
         }
     }
 }

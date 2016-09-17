@@ -2,17 +2,89 @@
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "JSON schema for AWS Cloud Formation (.cf.json) template files",
     "definitions": {
+        "ref": {
+            "type": "object",
+            "properties": {
+                "Ref": {
+                    "type": "string"
+                }
+            }
+        },
+        "cidr": {
+            "type": "string",
+            "pattern": "^\\d+.\\d+.\\d+.\\d+(/\\d+)?$"
+        },
+        "parameterType": {
+            "type": "string",
+            "enum": [
+                "String",
+                "Boolean",
+                "Number"
+            ]
+        },
         "resourceType": {
             "type": "string",
             "enum": [
                 "AWS::EC2::DHCPOptions",
                 "AWS::EC2::EIP",
-                "AWS::EC2::VPC"
+                "AWS::EC2::VPC",
+                "AWS::EC2::Subnet"
             ]
+        },
+        "parameter": {
+            "type": "object",
+            "properties": {
+                "Default": {
+                    "type": [
+                        "string",
+                        "number",
+                        "array",
+                        "boolean",
+                        "object"
+                    ]
+                },
+                "Description": {
+                    "type": "string"
+                },
+                "Type": {
+                    "$ref": "#/definitions/parameterType"
+                },
+                "MinLength": {
+                    "type": [
+                        "number",
+                        "object"
+                    ]
+                },
+                "MaxLength": {
+                    "type": [
+                        "number",
+                        "object"
+                    ]
+                },
+                "AllowedPattern": {
+                    "type": [
+                        "string",
+                        "object"
+                    ]
+                },
+                "ConstraintDescription": {
+                    "type": [
+                        "string",
+                        "object"
+                    ]
+                }
+            }
         },
         "resources": {
             "type": "object",
             "properties": {
+                "Parameters": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/parameter",
+                        "default": {}
+                    }
+                },
                 "Resources": {
                     "type": "object",
                     "additionalProperties": {
@@ -25,6 +97,9 @@
                             },
                             {
                                 "$ref": "#/definitions/eip"
+                            },
+                            {
+                                "$ref": "#/definitions/subnet"
                             }
                         ],
                         "default": {}
@@ -87,7 +162,10 @@
                     "type": "object",
                     "properties": {
                         "InstanceId": {
-                            "type": "string"
+                            "type": [
+                                "string",
+                                "object"
+                            ]
                         },
                         "Domain": {
                             "type": "string"
@@ -105,11 +183,12 @@
                 },
                 "Properties": {
                     "type": "object",
-                    "required": ["CidrBlock"],
+                    "required": [
+                        "CidrBlock"
+                    ],
                     "properties": {
                         "CidrBlock": {
-                            "type": "string",
-                            "pattern": "^\\d+.\\d+.\\d+.\\d+(/\\d+)?$"
+                            "$ref": "#/definitions/cidr"
                         },
                         "EnableDnsSupport": {
                             "type": "boolean"
@@ -128,6 +207,47 @@
                             "type": "array",
                             "items": {
                                 "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "subnet": {
+            "type": "object",
+            "properties": {
+                "Type": {
+                    "$ref": "#/definitions/resourceType",
+                    "pattern": "AWS::EC2::Subnet"
+                },
+                "Properties": {
+                    "type": "object",
+                    "required": [
+                        "VpcId",
+                        "CidrBlock"
+                    ],
+                    "properties": {
+                        "AvailabilityZone": {
+                            "type": "string"
+                        },
+                        "CidrBlock": {
+                            "$ref": "#/definitions/cidr"
+                        },
+                        "MapPublicIpOnLaunch": {
+                            "type": "boolean"
+                        },
+                        "Tags": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "VpcId": {
+                            "Ref": {
+                                "type": [
+                                    "string",
+                                    "object"
+                                ]
                             }
                         }
                     }
