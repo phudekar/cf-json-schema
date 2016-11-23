@@ -37,8 +37,12 @@ str = str.replace(/String/g, JSON.stringify(getType("string")));
 
 var obj = JSON.parse(str);
 
+var description = "";
+description = $("p","#main-col-body")[0].innerText;
+
 var item = {
     "type": "object",
+    "description":description,
     "properties": {
         "Type": {
             "$ref": "#/definitions/resourceType",

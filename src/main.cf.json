@@ -20,14 +20,14 @@
             "Type": "AWS::EC2::Subnet",
             "Properties": {
                 "CidrBlock": "10.0.0.1/16",
-                "VpcId": ""
+                "VpcId":""
             }
         }
     },
     "Parameters": {
         "abc": {
             "Type": "Number",
-            "Default": 2
+            "Default": "2"
         }
     }
 }

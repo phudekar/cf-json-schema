@@ -5,7 +5,7 @@
             "fileMatch": [
                 "/*.cf.json"
             ],
-            "url": "./.vscode/cfschema.json"
+            "url": "./.vscode/schema.json"
         }
     ]
 }
